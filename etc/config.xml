@@ -3,7 +3,7 @@
     <default>
         <requiredlogin>
             <general>
-                <enable>1</enable>
+                <enabled>1</enabled>
             </general>
             <pageexception>
                 <target_url_redirect>customer/account/login</target_url_redirect>

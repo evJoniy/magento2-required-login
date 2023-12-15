@@ -1,35 +1,25 @@
 <?php
-/*
- * This file is part of the Required Login module for Magento2.
- *
- * (c) zekinah
- *
- */
+
 namespace Zone\RequiredLogin\Plugin;
 
 use Magento\Customer\Controller\Account\LoginPost;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Controller\Result\Redirect;
 
 class AfterLoginPlugin
 {
-	const CONFIG_REDIRECT_DASHBOARD = 'customer/startup/redirect_dashboard';
-
-	private $scopeConfig;
+    const CONFIG_REDIRECT_DASHBOARD = 'customer/startup/redirect_dashboard';
 
     public function __construct(
-		ScopeConfigInterface $scopeConfig
+        private readonly ScopeConfigInterface $scopeConfig
     ) {
-		$this->scopeConfig = $scopeConfig;
     }
 
-    public function afterExecute(LoginPost $subject, $resultRedirect)
+    public function afterExecute($resultRedirect)
     {
-		if($this->scopeConfig->getValue(self::CONFIG_REDIRECT_DASHBOARD)) {
-			return $resultRedirect;
-		} else {
-			$resultRedirect->setPath('/');
-			return $resultRedirect;
-		}
+        if (!$this->scopeConfig->getValue(self::CONFIG_REDIRECT_DASHBOARD)) {
+            $resultRedirect->setPath('/');
+        }
+
+        return $resultRedirect;
     }
 }
