@@ -2,6 +2,7 @@
 
 namespace Zone\RequiredLogin\Observer;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\App\ResponseFactory;
@@ -15,12 +16,19 @@ class CheckRequiredLogin implements ObserverInterface
         private readonly Data $data,
         private readonly UrlInterface $url,
         private readonly ManagerInterface $messageManager,
-        private readonly ResponseFactory $responseFactory
+        private readonly ResponseFactory $responseFactory,
+        private readonly ScopeConfigInterface $scopeConfig
     ) {
     }
 
     public function execute(Observer $observer)
     {
+        $isModuleEnabled = $this->scopeConfig->getValue('requiredlogin/general/enable');
+
+        if (!$isModuleEnabled) {
+            return $this;
+        }
+
         $isAuthAction = $this->data->isAuthAction();
 
         if ($this->data->isAdminLoggedInOrIsAdminAction() || $isAuthAction) {
